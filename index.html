@@ -1,168 +1,481 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tareas Logística</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-<style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: var(--font-sans); }
-.app { padding: 1.5rem 1rem; max-width: 600px; margin: 0 auto; }
-.header { margin-bottom: 1.5rem; }
-.fecha-hoy { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 4px; }
-.titulo { font-size: 22px; font-weight: 500; color: var(--color-text-primary); }
-.add-section { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-bottom: 1.5rem; }
-.add-row { display: flex; gap: 8px; margin-bottom: 8px; }
-.add-row input[type="text"] { flex: 1; }
-.add-row input[type="date"] { width: 160px; }
-.add-row input[type="time"] { width: 110px; }
-.btn-add { background: var(--color-background-primary); border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 0 16px; height: 36px; cursor: pointer; font-size: 14px; font-weight: 500; color: var(--color-text-primary); display: flex; align-items: center; gap: 6px; white-space: nowrap; }
-.btn-add:hover { background: var(--color-background-secondary); }
-.filters { display: flex; gap: 8px; margin-bottom: 1rem; flex-wrap: wrap; }
-.filter-btn { background: transparent; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 4px 12px; font-size: 13px; cursor: pointer; color: var(--color-text-secondary); }
-.filter-btn.active { background: var(--color-background-secondary); border-color: var(--color-border-secondary); color: var(--color-text-primary); font-weight: 500; }
-.grupo { margin-bottom: 1.25rem; }
-.grupo-titulo { font-size: 12px; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.06em; padding: 0 4px; margin-bottom: 8px; }
-.tarea { display: flex; align-items: flex-start; gap: 10px; background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 10px 12px; margin-bottom: 6px; cursor: default; }
-.tarea.completada .tarea-texto { text-decoration: line-through; color: var(--color-text-tertiary); }
-.tarea-check { width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid var(--color-border-secondary); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; margin-top: 1px; transition: background 0.15s; }
-.tarea.completada .tarea-check { background: var(--color-background-success); border-color: var(--color-border-success); }
-.tarea-body { flex: 1; min-width: 0; }
-.tarea-texto { font-size: 14px; color: var(--color-text-primary); line-height: 1.4; }
-.tarea-meta { font-size: 12px; color: var(--color-text-secondary); margin-top: 2px; display: flex; gap: 8px; }
-.btn-del { background: transparent; border: none; color: var(--color-text-tertiary); cursor: pointer; padding: 0 4px; font-size: 16px; line-height: 1; flex-shrink: 0; }
-.btn-del:hover { color: var(--color-text-danger); }
-.empty { text-align: center; color: var(--color-text-tertiary); font-size: 14px; padding: 2rem 0; }
-</style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f4f6f9;
+      color: #1a1a1a;
+      min-height: 100vh;
+      padding: 1.5rem 1rem;
+    }
 
+    .app { max-width: 680px; margin: 0 auto; }
+
+    /* Hero */
+    .hero {
+      background: #0C447C;
+      border-radius: 14px;
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .hero-icon {
+      width: 54px; height: 54px;
+      background: #185FA5;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .hero-title { font-size: 20px; font-weight: 600; color: #E6F1FB; }
+    .hero-sub { font-size: 13px; color: #85B7EB; margin-top: 3px; }
+    .hero-pct { margin-left: auto; text-align: right; }
+    .hero-pct-num { font-size: 24px; font-weight: 600; color: #E6F1FB; }
+    .hero-pct-lbl { font-size: 12px; color: #85B7EB; }
+
+    /* Stats */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 1.25rem;
+    }
+    .stat {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 0.875rem 1rem;
+    }
+    .stat-n { font-size: 22px; font-weight: 600; color: #1a1a1a; }
+    .stat-l { font-size: 12px; color: #64748b; margin-top: 2px; }
+
+    /* Panel */
+    .panel {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    .panel-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Equipo */
+    .personas-list { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 0.75rem; }
+    .persona-chip {
+      display: flex; align-items: center; gap: 5px;
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      border-radius: 20px;
+      padding: 3px 10px 3px 5px;
+      font-size: 13px;
+    }
+    .persona-avatar {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 9px; font-weight: 700;
+    }
+    .btn-del-chip {
+      background: none; border: none;
+      color: #94a3b8; cursor: pointer;
+      font-size: 15px; line-height: 1;
+      margin-left: 2px; padding: 0;
+    }
+    .btn-del-chip:hover { color: #ef4444; }
+
+    /* Formulario */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+    .form-row { display: flex; gap: 8px; }
+    .form-row input { flex: 1; }
+
+    input[type="text"], input[type="date"], input[type="time"], select {
+      height: 38px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      padding: 0 10px;
+      font-size: 14px;
+      background: #fff;
+      color: #1a1a1a;
+      width: 100%;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    input:focus, select:focus { border-color: #185FA5; box-shadow: 0 0 0 3px rgba(24,95,165,0.1); }
+
+    button {
+      height: 38px;
+      padding: 0 16px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      background: #fff;
+      font-size: 14px;
+      font-weight: 500;
+      color: #1a1a1a;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+    button:hover { background: #f1f5f9; }
+    button.primary {
+      background: #0C447C;
+      color: #fff;
+      border-color: #0C447C;
+    }
+    button.primary:hover { background: #185FA5; border-color: #185FA5; }
+
+    /* Filtros */
+    .filtros { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1rem; }
+    .fbtn {
+      height: 30px;
+      padding: 0 12px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      background: #fff;
+      font-size: 12px;
+      font-weight: 400;
+      color: #64748b;
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+    .fbtn.on {
+      background: #0C447C;
+      border-color: #0C447C;
+      color: #fff;
+      font-weight: 600;
+    }
+    .sep { width: 1px; background: #e2e8f0; margin: 0 4px; align-self: stretch; }
+
+    /* Tareas */
+    .tarea-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 6px;
+      transition: border-color 0.15s;
+    }
+    .tarea-card:hover { border-color: #94a3b8; }
+    .tarea-card.done { opacity: 0.65; }
+    .tarea-card.done .tarea-txt { text-decoration: line-through; color: #94a3b8; }
+
+    .chk {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      border: 2px solid #cbd5e1;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      margin-top: 1px;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .chk.done { background: #16a34a; border-color: #16a34a; }
+
+    .tarea-body { flex: 1; min-width: 0; }
+    .tarea-txt { font-size: 14px; color: #1a1a1a; line-height: 1.45; }
+    .tarea-meta {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 5px;
+    }
+    .meta-item {
+      font-size: 12px;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .avatar-sm {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 8px; font-weight: 700;
+    }
+
+    .prio-badge {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+    .prio-alta  { background: #fef2f2; color: #991b1b; }
+    .prio-media { background: #fffbeb; color: #92400e; }
+    .prio-baja  { background: #f0fdf4; color: #166534; }
+
+    .btn-del-t {
+      background: transparent;
+      border: none;
+      color: #cbd5e1;
+      cursor: pointer;
+      padding: 0 2px;
+      font-size: 16px;
+      flex-shrink: 0;
+      height: auto;
+    }
+    .btn-del-t:hover { color: #ef4444; background: transparent; }
+
+    .empty {
+      text-align: center;
+      color: #94a3b8;
+      font-size: 14px;
+      padding: 2rem 0;
+    }
+
+    .divider { width: 1px; height: 20px; background: #e2e8f0; }
+
+    @media (max-width: 480px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: repeat(3,1fr); }
+    }
+  </style>
+</head>
+<body>
 <div class="app">
-  <h2 class="sr-only">Agenda de tareas personal</h2>
-  <div class="header">
-    <div class="fecha-hoy" id="fecha-hoy"></div>
-    <div class="titulo"><i class="ti ti-calendar" aria-hidden="true" style="font-size:20px;vertical-align:-2px;margin-right:8px;"></i>Mi Agenda</div>
-  </div>
 
-  <div class="add-section">
-    <div class="add-row">
-      <input type="text" id="nueva-tarea" placeholder="Nueva tarea..." maxlength="120" />
+  <div class="hero">
+    <div class="hero-icon">
+      <i class="ti ti-truck" aria-hidden="true" style="font-size:28px;color:#E6F1FB"></i>
     </div>
-    <div class="add-row">
-      <input type="date" id="nueva-fecha" />
-      <input type="time" id="nueva-hora" />
-      <button class="btn-add" onclick="agregarTarea()"><i class="ti ti-plus" aria-hidden="true"></i>Añadir</button>
+    <div>
+      <div class="hero-title">Tareas Logística</div>
+      <div class="hero-sub" id="fecha-hero"></div>
+    </div>
+    <div class="hero-pct">
+      <div class="hero-pct-num" id="hero-pct">0%</div>
+      <div class="hero-pct-lbl">completado</div>
     </div>
   </div>
 
-  <div class="filters">
-    <button class="filter-btn active" onclick="setFiltro('todas', this)">Todas</button>
-    <button class="filter-btn" onclick="setFiltro('pendientes', this)">Pendientes</button>
-    <button class="filter-btn" onclick="setFiltro('completadas', this)">Completadas</button>
+  <div class="stats">
+    <div class="stat"><div class="stat-n" id="st-total">0</div><div class="stat-l">Total tareas</div></div>
+    <div class="stat"><div class="stat-n" id="st-pend">0</div><div class="stat-l">Pendientes</div></div>
+    <div class="stat"><div class="stat-n" id="st-done">0</div><div class="stat-l">Completadas</div></div>
   </div>
 
-  <div id="lista-tareas"></div>
+  <div class="panel">
+    <div class="panel-title"><i class="ti ti-users" aria-hidden="true"></i>Equipo</div>
+    <div class="personas-list" id="personas-list"></div>
+    <div class="form-row">
+      <input type="text" id="nueva-persona" placeholder="Nombre de persona..." maxlength="30" />
+      <button onclick="addPersona()"><i class="ti ti-user-plus" aria-hidden="true"></i>Añadir</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title"><i class="ti ti-circle-plus" aria-hidden="true"></i>Nueva tarea</div>
+    <div class="form-grid">
+      <input type="text" id="t-texto" placeholder="Descripción de la tarea..." maxlength="120" />
+      <select id="t-persona"><option value="">— Sin asignar —</option></select>
+    </div>
+    <div class="form-grid">
+      <input type="date" id="t-fecha" />
+      <select id="t-prio">
+        <option value="media">Prioridad media</option>
+        <option value="alta">Prioridad alta</option>
+        <option value="baja">Prioridad baja</option>
+      </select>
+    </div>
+    <div class="form-row" style="margin-top:8px">
+      <input type="time" id="t-hora" style="max-width:140px" />
+      <button class="primary" onclick="addTarea()" style="margin-left:auto">
+        <i class="ti ti-plus" aria-hidden="true"></i>Crear tarea
+      </button>
+    </div>
+  </div>
+
+  <div class="filtros" id="filtros"></div>
+  <div id="lista"></div>
+
 </div>
 
 <script>
-const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
-const DIAS = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+  const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  const DIAS  = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+  const FGCOL = ['#0C447C','#0F6E56','#993C1D','#534AB7','#854F0B','#3B6D11','#993556','#7c3a00'];
+  const BGCOL = ['#dbeafe','#d1fae5','#fee2e2','#ede9fe','#fef3c7','#dcfce7','#fce7f3','#ffedd5'];
 
-let tareas = JSON.parse(localStorage.getItem('agenda_tareas') || '[]');
-let filtro = 'todas';
+  let personas = JSON.parse(localStorage.getItem('log_p') || '["Ana García","Carlos López"]');
+  let tareas   = JSON.parse(localStorage.getItem('log_t') || '[]');
+  let filtroE  = 'todas';
+  let filtroP  = 'todas';
 
-function guardar() {
-  try { localStorage.setItem('agenda_tareas', JSON.stringify(tareas)); } catch(e) {}
-}
-
-function fechaLabel(fechaStr) {
-  if (!fechaStr) return '';
-  const hoy = new Date(); hoy.setHours(0,0,0,0);
-  const manana = new Date(hoy); manana.setDate(hoy.getDate()+1);
-  const [y,m,d] = fechaStr.split('-').map(Number);
-  const f = new Date(y,m-1,d);
-  if (f.getTime() === hoy.getTime()) return 'Hoy';
-  if (f.getTime() === manana.getTime()) return 'Mañana';
-  return `${DIAS[f.getDay()]} ${d} ${MESES[m-1]}`;
-}
-
-function setFiltro(f, btn) {
-  filtro = f;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  render();
-}
-
-function toggleTarea(id) {
-  const t = tareas.find(t => t.id === id);
-  if (t) { t.completada = !t.completada; guardar(); render(); }
-}
-
-function eliminarTarea(id) {
-  tareas = tareas.filter(t => t.id !== id);
-  guardar(); render();
-}
-
-function agregarTarea() {
-  const texto = document.getElementById('nueva-tarea').value.trim();
-  if (!texto) return;
-  const fecha = document.getElementById('nueva-fecha').value;
-  const hora = document.getElementById('nueva-hora').value;
-  tareas.push({ id: Date.now(), texto, fecha, hora, completada: false });
-  guardar();
-  document.getElementById('nueva-tarea').value = '';
-  render();
-}
-
-document.getElementById('nueva-tarea').addEventListener('keydown', e => {
-  if (e.key === 'Enter') agregarTarea();
-});
-
-function render() {
-  const lista = document.getElementById('lista-tareas');
-  let visibles = tareas.filter(t =>
-    filtro === 'todas' ? true : filtro === 'pendientes' ? !t.completada : t.completada
-  );
-
-  if (!visibles.length) {
-    lista.innerHTML = '<div class="empty"><i class="ti ti-clipboard" aria-hidden="true" style="font-size:32px;display:block;margin:0 auto 8px;"></i>No hay tareas aquí</div>';
-    return;
+  function save() {
+    localStorage.setItem('log_p', JSON.stringify(personas));
+    localStorage.setItem('log_t', JSON.stringify(tareas));
   }
 
-  const conFecha = visibles.filter(t => t.fecha).sort((a,b) => a.fecha.localeCompare(b.fecha) || (a.hora||'').localeCompare(b.hora||''));
-  const sinFecha = visibles.filter(t => !t.fecha);
+  function colorIdx(nombre) { return Math.abs([...nombre].reduce((a,c)=>a+c.charCodeAt(0),0)) % FGCOL.length; }
+  function iniciales(n) { return n.trim().split(/\s+/).map(p=>p[0]).join('').toUpperCase().slice(0,2); }
 
-  let html = '';
+  function fechaLabel(f) {
+    if (!f) return '';
+    const hoy  = new Date(); hoy.setHours(0,0,0,0);
+    const man  = new Date(hoy); man.setDate(hoy.getDate()+1);
+    const [y,m,d] = f.split('-').map(Number);
+    const fd   = new Date(y,m-1,d);
+    if (fd.getTime() === hoy.getTime()) return 'Hoy';
+    if (fd.getTime() === man.getTime()) return 'Mañana';
+    return `${DIAS[fd.getDay()]} ${d} ${MESES[m-1]}`;
+  }
 
-  if (conFecha.length) {
-    const grupos = {};
-    conFecha.forEach(t => { (grupos[t.fecha] = grupos[t.fecha]||[]).push(t); });
-    Object.entries(grupos).forEach(([fecha, items]) => {
-      html += `<div class="grupo"><div class="grupo-titulo">${fechaLabel(fecha)}</div>`;
-      items.forEach(t => { html += tarjetaHTML(t); });
-      html += '</div>';
+  function renderPersonas() {
+    document.getElementById('personas-list').innerHTML = personas.map((p,i) => {
+      const ci = colorIdx(p);
+      return `<div class="persona-chip">
+        <div class="persona-avatar" style="background:${BGCOL[ci]};color:${FGCOL[ci]}">${iniciales(p)}</div>
+        ${p}
+        <button class="btn-del-chip" onclick="delPersona(${i})" title="Eliminar ${p}">×</button>
+      </div>`;
+    }).join('');
+
+    const sel = document.getElementById('t-persona');
+    const prev = sel.value;
+    sel.innerHTML = '<option value="">— Sin asignar —</option>' + personas.map(p=>`<option value="${p}">${p}</option>`).join('');
+    if (prev) sel.value = prev;
+    renderFiltros();
+  }
+
+  function renderFiltros() {
+    let html = '';
+    ['todas','pendientes','completadas'].forEach(e => {
+      const lbl = e==='todas'?'Todas':e==='pendientes'?'Pendientes':'Completadas';
+      html += `<button class="fbtn ${filtroE===e?'on':''}" onclick="setFE('${e}')">${lbl}</button>`;
     });
+    html += '<div class="divider"></div>';
+    html += `<button class="fbtn ${filtroP==='todas'?'on':''}" onclick="setFP('todas')">Todos</button>`;
+    personas.forEach(p => {
+      html += `<button class="fbtn ${filtroP===p?'on':''}" onclick="setFP('${p.replace(/'/g,"\\'")}')"><i class="ti ti-user" aria-hidden="true" style="font-size:11px;margin-right:3px"></i>${p}</button>`;
+    });
+    document.getElementById('filtros').innerHTML = html;
   }
 
-  if (sinFecha.length) {
-    html += `<div class="grupo"><div class="grupo-titulo">Sin fecha</div>`;
-    sinFecha.forEach(t => { html += tarjetaHTML(t); });
-    html += '</div>';
+  function setFE(e) { filtroE = e; renderFiltros(); renderTareas(); }
+  function setFP(p) { filtroP = p; renderFiltros(); renderTareas(); }
+
+  function addPersona() {
+    const v = document.getElementById('nueva-persona').value.trim();
+    if (!v || personas.includes(v)) return;
+    personas.push(v); save(); renderPersonas(); renderTareas();
+    document.getElementById('nueva-persona').value = '';
   }
 
-  lista.innerHTML = html;
-}
+  function delPersona(i) {
+    const n = personas[i];
+    tareas = tareas.map(t => t.persona === n ? {...t, persona:''} : t);
+    personas.splice(i,1); save(); renderPersonas(); renderTareas();
+  }
 
-function tarjetaHTML(t) {
-  const check = t.completada ? `<i class="ti ti-check" style="font-size:11px;color:var(--color-text-success);" aria-hidden="true"></i>` : '';
-  const meta = [t.fecha ? fechaLabel(t.fecha) : '', t.hora || ''].filter(Boolean).join(' · ');
-  return `<div class="tarea ${t.completada?'completada':''}">
-    <div class="tarea-check" onclick="toggleTarea(${t.id})" role="button" aria-label="${t.completada?'Marcar como pendiente':'Marcar como completada'}">${check}</div>
-    <div class="tarea-body">
-      <div class="tarea-texto">${t.texto}</div>
-      ${meta ? `<div class="tarea-meta"><i class="ti ti-clock" aria-hidden="true" style="font-size:12px;vertical-align:-1px;"></i>${meta}</div>` : ''}
-    </div>
-    <button class="btn-del" onclick="eliminarTarea(${t.id})" aria-label="Eliminar tarea"><i class="ti ti-trash" aria-hidden="true"></i></button>
-  </div>`;
-}
+  function addTarea() {
+    const texto = document.getElementById('t-texto').value.trim();
+    if (!texto) { document.getElementById('t-texto').focus(); return; }
+    tareas.push({
+      id: Date.now(),
+      texto,
+      persona: document.getElementById('t-persona').value,
+      fecha:   document.getElementById('t-fecha').value,
+      hora:    document.getElementById('t-hora').value,
+      prio:    document.getElementById('t-prio').value,
+      done:    false
+    });
+    save(); renderTareas();
+    document.getElementById('t-texto').value = '';
+    document.getElementById('t-texto').focus();
+  }
 
-const ahora = new Date();
-document.getElementById('fecha-hoy').textContent = `${DIAS[ahora.getDay()]} ${ahora.getDate()} de ${MESES[ahora.getMonth()]} de ${ahora.getFullYear()}`;
-const hoyStr = ahora.toISOString().split('T')[0];
-document.getElementById('nueva-fecha').value = hoyStr;
+  function toggleT(id) {
+    const t = tareas.find(t=>t.id===id);
+    if (t) { t.done = !t.done; save(); renderTareas(); }
+  }
 
-render();
+  function delT(id) {
+    if (!confirm('¿Eliminar esta tarea?')) return;
+    tareas = tareas.filter(t=>t.id!==id); save(); renderTareas();
+  }
+
+  function renderTareas() {
+    let vis = tareas.filter(t => {
+      const eOk = filtroE==='todas' || (filtroE==='pendientes'&&!t.done) || (filtroE==='completadas'&&t.done);
+      const pOk = filtroP==='todas' || t.persona===filtroP;
+      return eOk && pOk;
+    });
+
+    const total = tareas.length, done = tareas.filter(t=>t.done).length;
+    document.getElementById('st-total').textContent = total;
+    document.getElementById('st-pend').textContent  = total - done;
+    document.getElementById('st-done').textContent  = done;
+    document.getElementById('hero-pct').textContent = total ? Math.round(done/total*100)+'%' : '0%';
+
+    if (!vis.length) {
+      document.getElementById('lista').innerHTML = '<div class="empty"><i class="ti ti-clipboard" style="font-size:32px;display:block;margin:0 auto 8px"></i>No hay tareas</div>';
+      return;
+    }
+
+    const orden = {alta:0, media:1, baja:2};
+    vis.sort((a,b) => {
+      if (a.done !== b.done) return a.done ? 1 : -1;
+      if (a.fecha && b.fecha) return a.fecha.localeCompare(b.fecha);
+      if (a.fecha) return -1; if (b.fecha) return 1;
+      return orden[a.prio] - orden[b.prio];
+    });
+
+    document.getElementById('lista').innerHTML = vis.map(t => {
+      const ci = t.persona ? colorIdx(t.persona) : -1;
+      const personaBit = t.persona && ci>=0
+        ? `<span class="meta-item"><div class="avatar-sm" style="background:${BGCOL[ci]};color:${FGCOL[ci]}">${iniciales(t.persona)}</div>${t.persona}</span>`
+        : '';
+      const fechaBit = t.fecha
+        ? `<span class="meta-item"><i class="ti ti-calendar" style="font-size:12px"></i>${fechaLabel(t.fecha)}${t.hora?' · '+t.hora:''}</span>`
+        : '';
+      return `<div class="tarea-card ${t.done?'done':''}">
+        <div class="chk ${t.done?'done':''}" onclick="toggleT(${t.id})" title="${t.done?'Marcar pendiente':'Completar'}">
+          ${t.done?'<i class="ti ti-check" style="font-size:11px;color:#fff"></i>':''}
+        </div>
+        <div class="tarea-body">
+          <div class="tarea-txt">${t.texto}</div>
+          <div class="tarea-meta">
+            <span class="prio-badge prio-${t.prio}">${t.prio}</span>
+            ${personaBit}${fechaBit}
+          </div>
+        </div>
+        <button class="btn-del-t" onclick="delT(${t.id})" title="Eliminar tarea"><i class="ti ti-trash"></i></button>
+      </div>`;
+    }).join('');
+  }
+
+  document.getElementById('nueva-persona').addEventListener('keydown', e => { if (e.key==='Enter') addPersona(); });
+  document.getElementById('t-texto').addEventListener('keydown', e => { if (e.key==='Enter') addTarea(); });
+
+  const ahora = new Date();
+  document.getElementById('fecha-hero').textContent = `${DIAS[ahora.getDay()]} ${ahora.getDate()} de ${MESES[ahora.getMonth()]} de ${ahora.getFullYear()}`;
+  document.getElementById('t-fecha').value = ahora.toISOString().split('T')[0];
+
+  renderPersonas();
+  renderTareas();
 </script>
+</body>
+</html>
